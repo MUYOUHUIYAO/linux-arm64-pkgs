@@ -28,7 +28,7 @@ jobs:
     - name: clone weektodo rep
       uses: sudosubin/git-clone-action@v1.0.1
       with: 
-        repository: manuelernestog/weektodo.git
+        repository: manuelernestog/weektodo
         ref: main
         path: weektodo
     - run: | 
