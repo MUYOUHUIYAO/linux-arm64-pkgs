@@ -30,7 +30,7 @@ jobs:
       with: 
         repository: manuelernestog/weektodo.git
         ref: main
-        path: ./weektodo
+        path: weektodo
     - run: | 
         npm install --global yarn
         yarn install
