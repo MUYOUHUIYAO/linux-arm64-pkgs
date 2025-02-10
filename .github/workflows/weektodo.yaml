@@ -39,7 +39,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install wine libwine
           sudo apt-get install snapd
-          sudo apt-get install libarchive-tools
+          sudo apt-get install libarchive-tools, openjpeg-tools
           sudo snap install snapcraft --classic
     - run: | 
         npm install --global yarn
