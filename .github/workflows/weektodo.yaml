@@ -31,7 +31,7 @@ jobs:
         repository: manuelernestog/weektodo
         ref: main
         path: weektodo
-    - run: 'sed -i ''s/target: \["deb", "rpm", "pacman","AppImage"],/target: ["new_value"],/'' vue.config.js'
+    - run: 'sed -i ''s/target: \["deb", "rpm", "pacman","AppImage"],/target: ["deb"],/'' vue.config.js'
       working-directory: ./weektodo
       shell: bash
     - run: | 
