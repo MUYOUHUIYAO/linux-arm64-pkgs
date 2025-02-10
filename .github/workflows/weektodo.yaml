@@ -34,6 +34,14 @@ jobs:
     - run: 'sed -i ''s/target: \["deb", "rpm", "pacman","AppImage"],/target: ["deb"],/'' vue.config.js'
       working-directory: ./weektodo
       shell: bash
+    - name: Install Linux Dependencies
+      run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install wine wine32
+          sudo apt-get install snapd
+          sudo apt-get install libarchive-tools
+          sudo snap install snapcraft --classic
     - run: | 
         npm install --global yarn
         yarn install
