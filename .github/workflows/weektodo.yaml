@@ -21,16 +21,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: clone weektodo rep
-      uses: sudosubin/git-clone-action@v1.0.1
-      with: 
-        repository: manuelernestog/weektodo.git
-        ref: main
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm install --global yarn
-    - run: yarn install
-    - run: yarn run electron:build
+    - name: clone weektodo rep
+      uses: sudosubin/git-clone-action@v1.0.1
+      with: 
+        repository: manuelernestog/weektodo.git
+        ref: main
+        path: ./weektodo
+    - run: | 
+        npm install --global yarn
+        yarn install
+        yarn run electron:build
+      working-directory: ./weektodo
