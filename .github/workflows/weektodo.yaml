@@ -54,9 +54,9 @@ jobs:
     - name: Github Release
       uses: softprops/action-gh-release@v2.2.1
       with:
-        files: 
-        - ./weektodo/dist_electron/WeekToDo-2.2.0-arm64.AppImage
-        - ./weektodo/dist_electron/WeekToDo-2.2.0-arm64.deb
+        files: |
+          ./weektodo/dist_electron/WeekToDo-2.2.0-arm64.AppImage
+          ./weektodo/dist_electron/WeekToDo-2.2.0-arm64.deb
         name: WeekToDo-2.2.0-arm64.AppImage
         tag_name: weektodo-2.2
         prerelease: true
