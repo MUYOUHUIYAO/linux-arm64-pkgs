@@ -31,7 +31,7 @@ jobs:
         repository: manuelernestog/weektodo
         ref: main
         path: weektodo
-    - run: 'sed -i ''s/target: \["deb", "rpm", "pacman","AppImage"],/target: ["deb"],/'' vue.config.js'
+    - run: 'sed -i ''s/target: \["deb", "rpm", "pacman","AppImage"],/target: ["AppImage"],/'' vue.config.js'
       working-directory: ./weektodo
       shell: bash
     - name: Install Linux Dependencies
@@ -40,8 +40,11 @@ jobs:
           sudo apt-get install wine libwine
           sudo apt-get install snapd
           sudo apt-get install libarchive-tools libopenjp2-tools
+          sudo apt-get install ruby-full build-essential
           sudo snap install snapcraft --classic
+          sudo gem install fpm
     - run: | 
+        export USE_SYSTEM_FPM=true
         npm install --global yarn
         yarn install
         yarn run electron:build
