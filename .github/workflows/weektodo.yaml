@@ -31,7 +31,7 @@ jobs:
         repository: manuelernestog/weektodo
         ref: main
         path: weektodo
-    - run: 'sed -i ''s/target: \["deb", "rpm", "pacman","AppImage"],/target: ["deb"],/'' vue.config.js'
+    - run: 'sed -i ''s/target: \["deb", "rpm", "pacman","AppImage"],/target: ["AppImage", "deb"],/'' vue.config.js'
       working-directory: ./weektodo
       shell: bash
     - name: Install Linux Dependencies
@@ -57,7 +57,7 @@ jobs:
         files: |
           ./weektodo/dist_electron/WeekToDo-2.2.0-arm64.AppImage
           ./weektodo/dist_electron/WeekToDo-2.2.0-arm64.deb
-        name: WeekToDo-2.2.0-arm64.AppImage
+        name: WeekToDo-2.2.0-arm64
         tag_name: weektodo-2.2
         prerelease: true
         token: ${{ secrets.GITHUB_TOKEN }}
