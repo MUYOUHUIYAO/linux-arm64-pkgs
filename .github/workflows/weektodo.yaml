@@ -56,7 +56,7 @@ jobs:
       with:
         files: |
           ./weektodo/dist_electron/WeekToDo-2.2.0-arm64.AppImage
-          ./weektodo/dist_electron/WeekToDo-2.2.0-arm64.deb
+          ./weektodo/dist_electron/WeekToDo_2.2.0_arm64.deb
         name: WeekToDo-2.2.0-arm64
         tag_name: weektodo-2.2
         prerelease: true
