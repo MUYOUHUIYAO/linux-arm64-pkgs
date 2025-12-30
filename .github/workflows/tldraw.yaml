@@ -1,1 +1,57 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: build weektodo for arm64
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-22.04-arm
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v6.1.0
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: clone tldraw rep
+      uses: sudosubin/git-clone-action@v1.0.1
+      with: 
+        repository: tldraw/tldraw
+        ref: v4.2.1
+        path: tldraw
+    - run: npm i -g corepack
+      working-directory: ./tldraw
+      shell: bash
+    - run: yarn
+      working-directory: ./tldraw
+      shell: bash
+    - run: yarn build
+      working-directory: ./tldraw
+      shell: bash
+    - run: tar -czf tldraw-static.tar.gz out .next public
+      working-directory: ./tldraw
+      shell: bash
+    - uses: softprops/action-gh-release@v2.2.1
+      with:
+        files: |
+           ./tldraw/tldraw-static.tar.gz
+        name: tldraw-static.tar.gz
+        tag_name: tldraw-static
+        prerelease: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
 
