@@ -44,7 +44,7 @@ jobs:
     - run: tree
       working-directory: ./tldraw
       shell: bash
-    - run: tar -czf tldraw-static.tar.gz apps
+    - run: tar -czf tldraw-static.tar.gz --exclude docs apps
       working-directory: ./tldraw
       shell: bash
     - uses: softprops/action-gh-release@v2.2.1
