@@ -4,10 +4,11 @@
 name: build tldraw for arm64
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
     paths:
-      - workflows/tldraw.yaml
+      - .github/workflows/tldraw.yaml
 
 jobs:
   build:
