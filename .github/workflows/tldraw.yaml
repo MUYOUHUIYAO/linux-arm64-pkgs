@@ -41,7 +41,7 @@ jobs:
     - run: yarn build
       working-directory: ./tldraw
       shell: bash
-    - run: tree
+    - run: tree -a -L 2 -d 
       working-directory: ./tldraw
       shell: bash
     - run: tar -czf tldraw-static.tar.gz --exclude docs apps
