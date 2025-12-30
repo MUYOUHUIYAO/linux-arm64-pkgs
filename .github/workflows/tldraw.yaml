@@ -40,6 +40,9 @@ jobs:
     - run: yarn build
       working-directory: ./tldraw
       shell: bash
+    - run: ls -R
+      working-directory: ./tldraw
+      shell: bash
     - run: tar -czf tldraw-static.tar.gz out .next public
       working-directory: ./tldraw
       shell: bash
