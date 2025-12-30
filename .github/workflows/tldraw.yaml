@@ -6,8 +6,8 @@ name: build tldraw for arm64
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    paths:
+      - workflows/tldraw.yaml
 
 jobs:
   build:
