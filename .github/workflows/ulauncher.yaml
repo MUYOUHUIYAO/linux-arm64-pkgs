@@ -44,9 +44,8 @@ jobs:
         apt-get download ulauncher \
           gir1.2-keybinder-3.0 libkeybinder-3.0-0 \
           gir1.2-webkit2-4.0 libwebkit2gtk-4.0-37 \
-          gir1.2-cairo-1.0 libcairo2 \
-          gir1.2-glib-2.0 libglib2.0-0
-        
+          gir1.2-javascriptcoregtk-4.0 gir1.2-soup-2.4 \
+          libicu66 libwebp6 libmanette-0.2-1      
         # 3. 如果你担心内网还缺其他图形依赖，可以开启下面这行（下载所有深层依赖，体积会变大）
         # apt-get download $(apt-rdepends ulauncher | grep -v "^ " | grep -v "debconf")
 
