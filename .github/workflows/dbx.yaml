@@ -38,13 +38,17 @@ jobs:
       - name: Inject Git for Checkout Action
         run: |
           apt-get update && apt-get install -y git
-          
+
       - name: clone dbx
         uses: sudosubin/git-clone-action@v1.0.1
         with: 
             repository: t8y2/dbx
             ref: main
             path: dbx
+    
+      - name: into dbx
+        run: |
+          cd dbx
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
