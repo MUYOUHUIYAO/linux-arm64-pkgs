@@ -41,7 +41,11 @@ jobs:
         apt-get update
         
         # 2. 离线下载 ulauncher 核心包以及你残缺的 keybinder 3.0 相关包
-        apt-get download ulauncher gir1.2-keybinder-3.0 libkeybinder-3.0-0
+        apt-get download ulauncher \
+          gir1.2-keybinder-3.0 libkeybinder-3.0-0 \
+          gir1.2-webkit2-4.0 libwebkit2gtk-4.0-37 \
+          gir1.2-cairo-1.0 libcairo2 \
+          gir1.2-glib-2.0 libglib2.0-0
         
         # 3. 如果你担心内网还缺其他图形依赖，可以开启下面这行（下载所有深层依赖，体积会变大）
         # apt-get download $(apt-rdepends ulauncher | grep -v "^ " | grep -v "debconf")
@@ -75,28 +79,9 @@ jobs:
         ln -s "$REAL_SO" libkeybinder-3.0.so.0
         ln -s "$REAL_SO" libkeybinder-3.0.so
 
-    - name: Create Portable Execution Entry Script
-      run: |
-        # 创建一个启动包装脚本，用户在内网只需运行这个脚本，它会自动在进程级别注入环境变量
-        cat << 'EOF' > ulauncher-portable/bin/ulauncher-run
-        #!/bin/bash
-        # 自动获取当前脚本所在的绝对路径，实现真正的绿色便携化
-        SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-        PORTABLE_ROOT="$(dirname "$SCRIPT_DIR")"
-
-        # 动态将解压后的私有 C 库路径和 Typelib 路径注入进程
-        export LD_LIBRARY_PATH="$PORTABLE_ROOT/lib:$LD_LIBRARY_PATH"
-        export GI_TYPELIB_PATH="$PORTABLE_ROOT/lib:$GI_TYPELIB_PATH"
-
-        # 执行真正的 ulauncher 二进制程序，并将所有参数透传
-        exec "$PORTABLE_ROOT/bin/ulauncher" "$@"
-        EOF
-        
-        chmod +x ulauncher-portable/bin/ulauncher-run
-
     - name: Archive and Compress Package
       run: |
-        tar -czvf ulauncher-ubuntu20-portable.tar.gz ulauncher-portable/
+        tar -czvf ulauncher-ubuntu20-portable.tar.gz ulauncher-portable/ deb-downloads/
 
     - name: Upload Portable Artifact
       uses: actions/upload-artifact@v4
