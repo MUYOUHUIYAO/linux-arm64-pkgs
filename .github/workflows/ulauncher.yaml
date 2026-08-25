@@ -19,8 +19,8 @@ jobs:
 
     - name: Install APT Download Tools
       run: |
-        sudo apt-get update
-        sudo apt-get install -y apt-rdepends binutils
+        apt-get update
+        apt-get install -y apt-rdepends binutils
 
     - name: Create Isolated Directory Structure
       run: |
@@ -33,8 +33,8 @@ jobs:
         mkdir -p deb-downloads
         cd deb-downloads
         # 1. 添加 Ulauncher 官方 PPA 仓库以获取针对 20.04 (focal) 的 deb 包
-        sudo add-apt-repository -y ppa:agornostal/ulauncher
-        sudo apt-get update
+        add-apt-repository -y ppa:agornostal/ulauncher
+        apt-get update
         
         # 2. 离线下载 ulauncher 核心包以及你残缺的 keybinder 3.0 相关包
         apt-get download ulauncher gir1.2-keybinder-3.0 libkeybinder-3.0-0
