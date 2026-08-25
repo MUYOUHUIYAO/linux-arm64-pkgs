@@ -37,7 +37,7 @@ jobs:
 
       - name: Inject Git for Checkout Action
         run: |
-          apt-get update && apt-get install -y git
+          apt-get update && apt-get install -y git wget curl build-essential
           
       - name: clone dbx
         uses: sudosubin/git-clone-action@v1.0.1
