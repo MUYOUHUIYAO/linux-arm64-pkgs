@@ -95,6 +95,7 @@ jobs:
       - name: Compute Rust dependency hash
         id: deps-hash
         shell: bash
+        working-directory: ./dbx
         run: |
           {
             find . -name Cargo.toml -not -path './target/*' -print0 \
@@ -144,6 +145,7 @@ jobs:
           tagName: ${{ github.ref_name }}
           releaseDraft: true
           args: --target ${{ matrix.target }}
+          projectPath: './dbx'
 
       - name: Show sccache stats
         if: always()
