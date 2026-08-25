@@ -18,6 +18,8 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install APT Download Tools
+      env:
+        DEBIAN_FRONTEND: noninteractive
       run: |
         apt-get update
         apt-get install -y apt-rdepends binutils software-properties-common
@@ -29,6 +31,8 @@ jobs:
         mkdir -p ulauncher-portable/bin
 
     - name: Download Ulauncher and Keybinder3 Deps
+      env:
+        DEBIAN_FRONTEND: noninteractive
       run: |
         mkdir -p deb-downloads
         cd deb-downloads
