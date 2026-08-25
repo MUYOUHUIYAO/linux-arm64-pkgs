@@ -1,0 +1,99 @@
+name: Pack Ulauncher and Deps for Ubuntu 20.04 Internal Network
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+    paths:
+      - .github/workflows/ulauncher.yaml
+
+jobs:
+  build-and-pack:
+    runs-on: ubuntu-20.04 # 强行指定 Ubuntu 20.04 环境，确保 glibc 版本完美对齐 2.31
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install APT Download Tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y apt-rdepends binutils
+
+    - name: Create Isolated Directory Structure
+      run: |
+        # 创建一个完全属于用户态的绿色根目录
+        mkdir -p ulauncher-portable/lib/girepository-1.0
+        mkdir -p ulauncher-portable/bin
+
+    - name: Download Ulauncher and Keybinder3 Deps
+      run: |
+        mkdir -p deb-downloads
+        cd deb-downloads
+        # 1. 添加 Ulauncher 官方 PPA 仓库以获取针对 20.04 (focal) 的 deb 包
+        sudo add-apt-repository -y ppa:agornostal/ulauncher
+        sudo apt-get update
+        
+        # 2. 离线下载 ulauncher 核心包以及你残缺的 keybinder 3.0 相关包
+        apt-get download ulauncher gir1.2-keybinder-3.0 libkeybinder-3.0-0
+        
+        # 3. 如果你担心内网还缺其他图形依赖，可以开启下面这行（下载所有深层依赖，体积会变大）
+        # apt-get download $(apt-rdepends ulauncher | grep -v "^ " | grep -v "debconf")
+
+    - name: Extract and Structure Packages (User-space Alignment)
+      run: |
+        # 解压所有下载的 deb 包到临时目录
+        mkdir -p tmp-extract
+        for deb in deb-downloads/*.deb; do
+          dpkg-deb -x "$deb" tmp-extract/
+        done
+        
+        # 1. 移动 Ulauncher 应用程序文件到我们指定的便携目录
+        cp -r tmp-extract/usr/* ulauncher-portable/
+        
+        # 2. 捞出关键的 C 语言底层 .so 动态库
+        cp -d tmp-extract/usr/lib/x86_64-linux-gnu/libkeybinder-3.0.so* ulauncher-portable/lib/ || true
+        
+        # 3. 捞出关键的 Python 映射 .typelib 文件
+        cp tmp-extract/usr/lib/x86_64-linux-gnu/girepository-1.0/Keybinder-3.0.typelib ulauncher-portable/lib/girepository-1.0/
+
+    - name: Rebuild Correct Relative Symbolic Links
+      run: |
+        cd ulauncher-portable/lib
+        # 强行切断原本指向系统 /usr/lib 的绝对死链
+        rm -f libkeybinder-3.0.so.0 libkeybinder-3.0.so
+        
+        # 【核心技巧】基于当前目录下的真实动态库，重建绝对合法的相对软链接
+        # 这样不管你把这个压缩包解压到内网家目录的任何地方，软链接都不会失效！
+        REAL_SO=$(ls libkeybinder-3.0.so.0.*.*)
+        ln -s "$REAL_SO" libkeybinder-3.0.so.0
+        ln -s "$REAL_SO" libkeybinder-3.0.so
+
+    - name: Create Portable Execution Entry Script
+      run: |
+        # 创建一个启动包装脚本，用户在内网只需运行这个脚本，它会自动在进程级别注入环境变量
+        cat << 'EOF' > ulauncher-portable/bin/ulauncher-run
+        #!/bin/bash
+        # 自动获取当前脚本所在的绝对路径，实现真正的绿色便携化
+        SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+        PORTABLE_ROOT="$(dirname "$SCRIPT_DIR")"
+
+        # 动态将解压后的私有 C 库路径和 Typelib 路径注入进程
+        export LD_LIBRARY_PATH="$PORTABLE_ROOT/lib:$LD_LIBRARY_PATH"
+        export GI_TYPELIB_PATH="$PORTABLE_ROOT/lib:$GI_TYPELIB_PATH"
+
+        # 执行真正的 ulauncher 二进制程序，并将所有参数透传
+        exec "$PORTABLE_ROOT/bin/ulauncher" "$@"
+        EOF
+        
+        chmod +x ulauncher-portable/bin/ulauncher-run
+
+    - name: Archive and Compress Package
+      run: |
+        tar -czvf ulauncher-ubuntu20-portable.tar.gz ulauncher-portable/
+
+    - name: Upload Portable Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ulauncher-ubuntu20-portable
+        path: ulauncher-ubuntu20-portable.tar.gz
