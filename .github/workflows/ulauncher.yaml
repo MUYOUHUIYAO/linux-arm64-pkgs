@@ -9,7 +9,9 @@ on:
 
 jobs:
   build-and-pack:
-    runs-on: ubuntu-20.04 # 强行指定 Ubuntu 20.04 环境，确保 glibc 版本完美对齐 2.31
+    runs-on: ubuntu-latest # 强行指定 Ubuntu 20.04 环境，确保 glibc 版本完美对齐 2.31
+    container:
+      image: ubuntu:20.04
 
     steps:
     - name: Checkout repository
