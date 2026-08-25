@@ -118,6 +118,8 @@ jobs:
           cache-on-failure: true
 
       - name: Install system dependencies (Linux)
+        env:
+            DEBIAN_FRONTEND: noninteractive
         if: startsWith(matrix.platform, 'ubuntu')
         run: |
             apt-get update
