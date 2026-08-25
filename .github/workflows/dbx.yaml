@@ -33,14 +33,13 @@ jobs:
       # Keep releases working until the shared S3 secrets are configured.
       SCCACHE_GHA_ENABLED: ${{ secrets.SCCACHE_S3_BUCKET == '' && 'true' || 'false' }}
     steps:
+      - uses: actions/checkout@v5
       - name: clone dbx
         uses: sudosubin/git-clone-action@v1.0.1
         with: 
             repository: t8y2/dbx
             ref: main
             path: dbx
-
-      - uses: actions/checkout@v5
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
