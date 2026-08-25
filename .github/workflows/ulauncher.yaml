@@ -61,14 +61,8 @@ jobs:
         cp -d tmp-extract/usr/lib/x86_64-linux-gnu/libkeybinder-3.0.so* ulauncher-portable/lib/ || true
         
         # 3. 捞出关键的 Python 映射 .typelib 文件
-        cp tmp-extract/usr/lib/x86_64-linux-gnu/girepository-1.0/Keybinder-3.0.typelib ulauncher-portable/lib/girepository-1.0/
+        cp tmp-extract/usr/lib/girepository-1.0/Keybinder-3.0.typelib ulauncher-portable/lib/girepository-1.0/
 
-    - name: Setup Upterm Session for Debugging
-      if: failure()
-      uses: lhotari/action-upterm@v1
-      with:
-        ## 这会强行通过安全中转，在日志中同时打印出标准的 SSH 和网页端 URL
-        limit-access-to-actor: true
     - name: Rebuild Correct Relative Symbolic Links
       run: |
         cd ulauncher-portable/lib
