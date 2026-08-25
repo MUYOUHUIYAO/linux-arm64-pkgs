@@ -20,7 +20,7 @@ jobs:
     - name: Install APT Download Tools
       run: |
         apt-get update
-        apt-get install -y apt-rdepends binutils
+        apt-get install -y apt-rdepends binutils software-properties-common
 
     - name: Create Isolated Directory Structure
       run: |
