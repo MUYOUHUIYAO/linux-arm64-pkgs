@@ -79,9 +79,12 @@ jobs:
               pyenv global 3.12
               python3 --version
               
-              wget -p local_debs http://archive.ubuntu.com/ubuntu/pool/universe/s/simde/libsimde-dev_0.7.2-6_all.deb
-              dpkg-scanpackages ./local_debs /dev/null | gzip -9c > ./local_debs/Packages.gz
-              echo "deb [trusted=yes] file://$(pwd)/local_debs ./local_debs" | sudo tee /etc/apt/sources.list.d/local-debs.list
+              mkdir -p local_debs
+              cd local_debs
+              wget http://archive.ubuntu.com/ubuntu/pool/universe/s/simde/libsimde-dev_0.7.2-6_all.deb
+              dpkg-scanpackages ./ /dev/null | gzip -9c > Packages.gz
+              echo "deb [trusted=yes] file://$(pwd)/ ./" | sudo tee /etc/apt/sources.list.d/local-debs.list
+              cat /etc/apt/sources.list.d/local-debs.list
               apt update
               python3 .github/workflows/ci.py build
 
