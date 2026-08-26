@@ -1,0 +1,92 @@
+name: CI
+on: [push, pull_request]
+env:
+    CI: 'true'
+    ASAN_OPTIONS: detect_leaks=0
+    LC_ALL: en_US.UTF-8
+    LANG: en_US.UTF-8
+
+permissions:
+  contents: read # to fetch code (actions/checkout)
+
+jobs:
+    bundle:
+        name: Bundle test (${{ matrix.os }})
+        runs-on: ${{ matrix.os }}
+        container:
+            image: ubuntu:20.04
+        strategy:
+            matrix:
+                os: [ubuntu-latest]
+        env:
+            KITTY_BUNDLE: 1
+            KITTY_SANITIZE: 1
+        steps:
+          - name: Checkout source code
+            uses: actions/checkout@v7.0.1
+            with:
+              fetch-depth: 10
+              persist-credentials: false
+        
+          - name: Inject Git for Checkout Action
+            run: |
+              apt-get update && apt-get install -y git wget curl build-essential
+          
+          - name: clone kitty
+            uses: sudosubin/git-clone-action@v1.0.1
+            with: 
+              repository: kovidgoyal/kitty
+              ref: main
+              path: kitty
+
+          - name: Install Go
+            uses: actions/setup-go@v7.0.0
+            with:
+              go-version-file: go.mod
+
+          - name: Build kitty
+            run: which python3 && cd ./kitty && python3 .github/workflows/ci.py build
+
+          - name: Test kitty
+            run: cd ./kitty && python3 .github/workflows/ci.py test
+
+    linux-dev:
+        name: Test ./dev.sh and benchmark
+        runs-on: ubuntu-latest
+        container:
+            image: ubuntu:20.04
+        steps:
+          - name: Checkout source code
+            uses: actions/checkout@v7.0.1
+            with:
+              fetch-depth: 10
+              persist-credentials: false
+
+          - name: Inject Git for Checkout Action
+            run: |
+              apt-get update && apt-get install -y git wget curl build-essential
+          
+          - name: clone kitty
+            uses: sudosubin/git-clone-action@v1.0.1
+            with: 
+              repository: kovidgoyal/kitty
+              ref: main
+              path: kitty
+
+          - name: Install build deps
+            env:
+              DEBIAN_FRONTEND: noninteractive
+            run: apt-get update && apt-get install -y curl xz-utils build-essential git pkg-config libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev libxkbcommon-x11-dev libfontconfig-dev libx11-xcb-dev libdbus-1-dev
+
+          - name: Install Go
+            uses: actions/setup-go@v7.0.0
+            with:
+              go-version-file: go.mod
+
+          - name: Build kitty
+            working-directory: ./kitty
+            run: ./dev.sh build
+
+          - name: Run benchmarks
+            working-directory: ./kitty
+            run: ./benchmark.py
