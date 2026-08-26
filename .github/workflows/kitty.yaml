@@ -67,6 +67,8 @@ jobs:
           - name: Build kitty
             working-directory: ./kitty
             run: |
+              eval "$(pyenv init -)"
+              pyenv versions
               pyenv global 3.12
               python3 --version
               python3 .github/workflows/ci.py build
