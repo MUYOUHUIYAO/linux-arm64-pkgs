@@ -45,7 +45,9 @@ jobs:
               go-version-file: ./kitty/go.mod
 
           - name: Build kitty
-            run: which python3 && cd ./kitty && python3 .github/workflows/ci.py build
+            run: |
+              cd ./kitty 
+              python3 .github/workflows/ci.py build
 
           - name: Test kitty
             run: cd ./kitty && python3 .github/workflows/ci.py test
