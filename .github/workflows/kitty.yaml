@@ -29,6 +29,8 @@ jobs:
               persist-credentials: false
         
           - name: Inject Git for Checkout Action
+            env:
+              DEBIAN_FRONTEND: noninteractive
             run: |
               apt-get update && apt-get install -y git wget curl build-essential software-properties-common
           
@@ -74,6 +76,8 @@ jobs:
               persist-credentials: false
 
           - name: Inject Git for Checkout Action
+            env:
+              DEBIAN_FRONTEND: noninteractive
             run: |
               apt-get update && apt-get install -y git wget curl build-essential software-properties-common
           
