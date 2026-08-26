@@ -86,6 +86,7 @@ jobs:
               echo "deb [trusted=yes] file://$(pwd)/ ./" | sudo tee /etc/apt/sources.list.d/local-debs.list
               cat /etc/apt/sources.list.d/local-debs.list
               apt update
+              cd ..
               python3 .github/workflows/ci.py build
 
           - name: Test kitty
