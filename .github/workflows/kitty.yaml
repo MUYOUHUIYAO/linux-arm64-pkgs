@@ -76,6 +76,7 @@ jobs:
               echo "set pyenv"
               eval "$(pyenv init -)"
               echo "list env versions"
+              pyenv install 3.12 -s
               pyenv versions
               echo "set version"
               pyenv global 3.12
