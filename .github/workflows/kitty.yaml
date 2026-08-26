@@ -42,7 +42,7 @@ jobs:
           - name: Install Go
             uses: actions/setup-go@v7.0.0
             with:
-              go-version-file: go.mod
+              go-version-file: ./kitty/go.mod
 
           - name: Build kitty
             run: which python3 && cd ./kitty && python3 .github/workflows/ci.py build
@@ -81,7 +81,7 @@ jobs:
           - name: Install Go
             uses: actions/setup-go@v7.0.0
             with:
-              go-version-file: go.mod
+              go-version-file: ./kitty/go.mod
 
           - name: Build kitty
             working-directory: ./kitty
