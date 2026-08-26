@@ -45,6 +45,8 @@ jobs:
               go-version-file: ./kitty/go.mod
 
           - name: 设置 Python 环境
+            env:
+              DEBIAN_FRONTEND: noninteractive
             run: |
               add-apt-repository ppa:deadsnakes/ppa -y
               apt update
