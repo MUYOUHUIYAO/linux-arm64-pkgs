@@ -36,7 +36,7 @@ jobs:
                   software-properties-common unzip libssl-dev zlib1g-dev \
                   libbz2-dev libreadline-dev libsqlite3-dev llvm \
                   libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev \
-                  libffi-dev liblzma-dev sudo
+                  libffi-dev liblzma-dev sudo dpkg-dev
           
           - name: clone kitty
             uses: sudosubin/git-clone-action@v1.0.1
@@ -78,8 +78,10 @@ jobs:
               pyenv versions
               pyenv global 3.12
               python3 --version
-              add-apt-repository ppa:ubuntu-toolchain-r/test
-              apt update
+              
+              wget -p local_debs http://archive.ubuntu.com/ubuntu/pool/universe/s/simde/libsimde-dev_0.7.2-6_all.deb
+              dpkg-scanpackages ./local_debs /dev/null | gzip -9c > ./local_debs/Packages.gz
+              echo "deb [trusted=yes] file://$(pwd)/local_debs ./local_debs" | sudo tee /etc/apt/sources.list.d/local-debs.list
               python3 .github/workflows/ci.py build
 
           - name: Test kitty
@@ -114,7 +116,7 @@ jobs:
                   software-properties-common unzip libssl-dev zlib1g-dev \
                   libbz2-dev libreadline-dev libsqlite3-dev llvm \
                   libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev \
-                  libffi-dev liblzma-dev
+                  libffi-dev liblzma-dev sudo dpkg-dev
           
           - name: clone kitty
             uses: sudosubin/git-clone-action@v1.0.1
@@ -130,10 +132,10 @@ jobs:
               add-apt-repository ppa:deadsnakes/ppa -y
               apt-get update
               apt-get install -y curl xz-utils build-essential git pkg-config libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev libxkbcommon-x11-dev libfontconfig-dev libx11-xcb-dev libdbus-1-dev
-              echo apt install python3.12 python3.12-venv python3.12-dev -y
 
           - name: Install python version
             uses: gabrielfalcao/pyenv-action@v18
+            id: pyenv_setup
             with:
               default: 3.12
               command: pip install -U pip  # upgrade pip after installing python
@@ -147,6 +149,11 @@ jobs:
           - name: Build kitty
             working-directory: ./kitty
             run: |
+              PYENV_ROOT="${{ steps.pyenv_setup.outputs.pyenv_root }}"
+              export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
+              eval "$(pyenv init -)"
+              pyenv install 3.12 -s
+              pyenv versions
               pyenv global 3.12
               python3 --version
               ./dev.sh build
@@ -154,6 +161,11 @@ jobs:
           - name: Run benchmarks
             working-directory: ./kitty
             run: |
+              PYENV_ROOT="${{ steps.pyenv_setup.outputs.pyenv_root }}"
+              export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
+              eval "$(pyenv init -)"
+              pyenv install 3.12 -s
+              pyenv versions
               pyenv global 3.12
               python3 --version
               ./benchmark.py
