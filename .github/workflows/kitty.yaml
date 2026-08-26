@@ -32,6 +32,7 @@ jobs:
             env:
               DEBIAN_FRONTEND: noninteractive
             run: |
+              add-apt-repository ppa:ubuntu-toolchain-r/test
               apt-get update && apt-get install -y git wget curl build-essential \
                   software-properties-common unzip libssl-dev zlib1g-dev \
                   libbz2-dev libreadline-dev libsqlite3-dev llvm \
