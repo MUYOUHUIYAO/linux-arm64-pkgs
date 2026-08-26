@@ -63,7 +63,10 @@ jobs:
             id: pyenv_setup
             with:
               default: 3.12
-              command: pip install -U pip  # upgrade pip after installing python
+              command: |
+                pip install -U pip  # upgrade pip after installing python
+                cd ./kitty
+                python3 .github/workflows/ci.py build
 
           - name: Build kitty
             working-directory: ./kitty
