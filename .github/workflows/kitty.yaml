@@ -60,6 +60,7 @@ jobs:
           
           - name: Install python version
             uses: gabrielfalcao/pyenv-action@v18
+            id: pyenv_setup
             with:
               default: 3.12
               command: pip install -U pip  # upgrade pip after installing python
@@ -67,6 +68,8 @@ jobs:
           - name: Build kitty
             working-directory: ./kitty
             run: |
+              PYENV_ROOT="${{ steps.pyenv_setup.outputs.pyenv_root }}"
+              export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
               echo "set pyenv"
               eval "$(pyenv init -)"
               echo "list env versions"
