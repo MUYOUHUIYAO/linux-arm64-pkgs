@@ -82,6 +82,7 @@ jobs:
               wget -p local_debs http://archive.ubuntu.com/ubuntu/pool/universe/s/simde/libsimde-dev_0.7.2-6_all.deb
               dpkg-scanpackages ./local_debs /dev/null | gzip -9c > ./local_debs/Packages.gz
               echo "deb [trusted=yes] file://$(pwd)/local_debs ./local_debs" | sudo tee /etc/apt/sources.list.d/local-debs.list
+              apt update
               python3 .github/workflows/ci.py build
 
           - name: Test kitty
