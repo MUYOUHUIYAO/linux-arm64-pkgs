@@ -161,7 +161,7 @@ jobs:
               pyenv versions
               pyenv global 3.12
               python3 --version
-              ./dev.sh build
+              ./dev.sh deps
 
           - name: Run benchmarks
             working-directory: ./kitty
