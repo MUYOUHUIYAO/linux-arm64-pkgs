@@ -30,7 +30,7 @@ jobs:
         
           - name: Inject Git for Checkout Action
             run: |
-              apt-get update && apt-get install -y git wget curl build-essential python3 python3-pip
+              apt-get update && apt-get install -y git wget curl build-essential
           
           - name: clone kitty
             uses: sudosubin/git-clone-action@v1.0.1
@@ -45,9 +45,11 @@ jobs:
               go-version-file: ./kitty/go.mod
 
           - name: 设置 Python 环境
-            uses: actions/setup-python@v5
-            with:
-              python-version: '3.8' # 可以指定你需要的任何 3.x 版本
+            run: |
+              add-apt-repository ppa:deadsnakes/ppa -y
+              apt update
+              apt install python3.12 python3.12-venv python3.12-dev -y
+
 
           - name: Build kitty
             run: |
@@ -71,7 +73,7 @@ jobs:
 
           - name: Inject Git for Checkout Action
             run: |
-              apt-get update && apt-get install -y git wget curl build-essential  python3 python3-pip
+              apt-get update && apt-get install -y git wget curl build-essential 
           
           - name: clone kitty
             uses: sudosubin/git-clone-action@v1.0.1
@@ -83,7 +85,11 @@ jobs:
           - name: Install build deps
             env:
               DEBIAN_FRONTEND: noninteractive
-            run: apt-get update && apt-get install -y curl xz-utils build-essential git pkg-config libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev libxkbcommon-x11-dev libfontconfig-dev libx11-xcb-dev libdbus-1-dev
+            run: |
+              add-apt-repository ppa:deadsnakes/ppa -y
+              apt-get update
+              apt-get install -y curl xz-utils build-essential git pkg-config libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev libxkbcommon-x11-dev libfontconfig-dev libx11-xcb-dev libdbus-1-dev
+              apt install python3.12 python3.12-venv python3.12-dev -y
 
           - name: Install Go
             uses: actions/setup-go@v7.0.0
