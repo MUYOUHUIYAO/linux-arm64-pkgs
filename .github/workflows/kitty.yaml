@@ -46,14 +46,20 @@ jobs:
             with:
               go-version-file: ./kitty/go.mod
 
-          - name: 设置 Python 环境
-            env:
-              DEBIAN_FRONTEND: noninteractive
-            run: |
-              add-apt-repository ppa:deadsnakes/ppa -y
-              apt update
-              apt install python3.12 python3.12-venv python3.12-dev -y
-
+          # - name: 设置 Python 环境
+          #   env:
+          #     DEBIAN_FRONTEND: noninteractive
+          #   run: |
+          #     add-apt-repository ppa:deadsnakes/ppa -y
+          #     apt update
+          #     apt install python3.12 python3.12-venv python3.12-dev -y
+          
+          - uses: actions/checkout@v4
+          - name: Install python version
+            uses: gabrielfalcao/pyenv-action@v18
+            with:
+              default: 3.12
+              command: pip install -U pip  # upgrade pip after installing python
 
           - name: Build kitty
             run: |
@@ -95,7 +101,15 @@ jobs:
               add-apt-repository ppa:deadsnakes/ppa -y
               apt-get update
               apt-get install -y curl xz-utils build-essential git pkg-config libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl1-mesa-dev libxkbcommon-x11-dev libfontconfig-dev libx11-xcb-dev libdbus-1-dev
-              apt install python3.12 python3.12-venv python3.12-dev -y
+              echo apt install python3.12 python3.12-venv python3.12-dev -y
+
+          - uses: actions/checkout@v4
+          - name: Install python version
+            uses: gabrielfalcao/pyenv-action@v18
+            with:
+              default: 3.12
+              command: pip install -U pip  # upgrade pip after installing python
+
 
           - name: Install Go
             uses: actions/setup-go@v7.0.0
