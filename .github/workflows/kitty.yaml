@@ -1,10 +1,10 @@
-name: CI
-on: [push, pull_request]
-env:
-    CI: 'true'
-    ASAN_OPTIONS: detect_leaks=0
-    LC_ALL: en_US.UTF-8
-    LANG: en_US.UTF-8
+name: build kitty
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+    paths:
+      - .github/workflows/kitty.yaml
 
 permissions:
   contents: read # to fetch code (actions/checkout)
@@ -36,7 +36,7 @@ jobs:
             uses: sudosubin/git-clone-action@v1.0.1
             with: 
               repository: kovidgoyal/kitty
-              ref: main
+              ref: master
               path: kitty
 
           - name: Install Go
@@ -70,7 +70,7 @@ jobs:
             uses: sudosubin/git-clone-action@v1.0.1
             with: 
               repository: kovidgoyal/kitty
-              ref: main
+              ref: master
               path: kitty
 
           - name: Install build deps
