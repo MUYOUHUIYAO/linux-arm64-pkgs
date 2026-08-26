@@ -30,7 +30,7 @@ jobs:
         
           - name: Inject Git for Checkout Action
             run: |
-              apt-get update && apt-get install -y git wget curl build-essential
+              apt-get update && apt-get install -y git wget curl build-essential python3 python3-pip
           
           - name: clone kitty
             uses: sudosubin/git-clone-action@v1.0.1
@@ -71,7 +71,7 @@ jobs:
 
           - name: Inject Git for Checkout Action
             run: |
-              apt-get update && apt-get install -y git wget curl build-essential
+              apt-get update && apt-get install -y git wget curl build-essential  python3 python3-pip
           
           - name: clone kitty
             uses: sudosubin/git-clone-action@v1.0.1
