@@ -130,8 +130,14 @@ jobs:
 
           - name: Build kitty
             working-directory: ./kitty
-            run: ./dev.sh build
+            run: |
+              pyenv global 3.12
+              python3 --version
+              ./dev.sh build
 
           - name: Run benchmarks
             working-directory: ./kitty
-            run: ./benchmark.py
+            run: |
+              pyenv global 3.12
+              python3 --version
+              ./benchmark.py
