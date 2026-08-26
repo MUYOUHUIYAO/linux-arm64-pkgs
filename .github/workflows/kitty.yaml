@@ -36,7 +36,7 @@ jobs:
                   software-properties-common unzip libssl-dev zlib1g-dev \
                   libbz2-dev libreadline-dev libsqlite3-dev llvm \
                   libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev \
-                  libffi-dev liblzma-dev
+                  libffi-dev liblzma-dev sudo
           
           - name: clone kitty
             uses: sudosubin/git-clone-action@v1.0.1
@@ -73,12 +73,9 @@ jobs:
             run: |
               PYENV_ROOT="${{ steps.pyenv_setup.outputs.pyenv_root }}"
               export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
-              echo "set pyenv"
               eval "$(pyenv init -)"
-              echo "list env versions"
               pyenv install 3.12 -s
               pyenv versions
-              echo "set version"
               pyenv global 3.12
               python3 --version
               python3 .github/workflows/ci.py build
@@ -86,6 +83,11 @@ jobs:
           - name: Test kitty
             working-directory: ./kitty
             run: |
+              PYENV_ROOT="${{ steps.pyenv_setup.outputs.pyenv_root }}"
+              export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
+              eval "$(pyenv init -)"
+              pyenv install 3.12 -s
+              pyenv versions
               pyenv global 3.12
               python3 --version
               python3 .github/workflows/ci.py test
